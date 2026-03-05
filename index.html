@@ -7,10 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --cyan: #00f2ff; --bg: #050507; --panel: #0a0a0c; --glass: rgba(255, 255, 255, 0.03); --user-blue: #007aff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: white; font-family: 'Inter', sans-serif; display: flex; height: 100dvh; width: 100vw; overflow: hidden; }
 
         /* Sidebar */
-        #sidebar { width: 280px; background: var(--panel); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; flex-shrink: 0; }
+        #sidebar { width: 280px; background: var(--panel); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; flex-shrink: 0; transition: 0.3s; }
         .sb-header { padding: 30px 20px; font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; color: var(--cyan); border-bottom: 1px solid #111; }
         .sb-nav { flex: 1; padding: 15px; overflow-y: auto; }
         .nav-group { color: #444; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin: 15px 0 8px 5px; }
@@ -25,11 +26,11 @@
         /* Main & Chat */
         #main { flex: 1; display: flex; flex-direction: column; background: var(--bg); overflow: hidden; position: relative; }
         #screen { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 30px 20px; display: flex; flex-direction: column; gap: 24px; }
-        .bubble { padding: 16px 20px; border-radius: 18px; max-width: 85%; line-height: 1.6; font-size: 16px; animation: fadeIn 0.3s ease-out; }
+        .bubble { padding: 16px 20px; border-radius: 18px; max-width: 85%; line-height: 1.6; font-size: 16px; animation: fadeIn 0.2s ease-out; }
         .nova { background: var(--glass); border: 1px solid rgba(0, 242, 255, 0.1); align-self: flex-start; color: #e0faff; border-bottom-left-radius: 4px; }
         .user { background: var(--user-blue); align-self: flex-end; color: white; border-bottom-right-radius: 4px; }
 
-        /* MODE TOGGLE */
+        /* Thinking Toggle */
         .controls-row { display: flex; justify-content: center; padding: 10px; background: #08080a; gap: 10px; border-top: 1px solid #1a1a1a; }
         .mode-chip { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid #222; color: #555; transition: 0.2s; }
         .mode-chip.active { background: var(--cyan); color: black; border-color: var(--cyan); box-shadow: 0 0 10px rgba(0,242,255,0.3); }
@@ -37,11 +38,15 @@
         .bottom-section { background: var(--panel); flex-shrink: 0; }
         .ai-warning { font-size: 10px; color: #444; text-align: center; padding: 10px; text-transform: uppercase; font-family: 'Outfit', sans-serif; letter-spacing: 1px; }
         #input-area { padding: 15px 20px; display: flex; gap: 12px; align-items: center; max-width: 1000px; margin: 0 auto; width: 100%; }
-        input { flex: 1; background: #121217; border: 1px solid #222; border-radius: 14px; padding: 15px; color: white; outline: none; font-size: 16px; }
+        input { flex: 1; background: #121217; border: 1px solid #222; border-radius: 14px; padding: 15px; color: white; outline: none; font-size: 16px; font-family: 'Inter', sans-serif; }
         #send { background: var(--cyan); border: none; border-radius: 14px; width: 55px; height: 50px; font-weight: bold; cursor: pointer; font-size: 20px; }
 
-        .code-box { background: #000; padding: 15px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; color: #4ade80; margin: 12px 0; overflow-x: auto; border: 1px solid #222; font-size: 13px; }
+        /* Code/RTL Formatting */
+        .code-box { background: #000; padding: 15px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; color: #4ade80; margin: 12px 0; overflow-x: auto; border: 1px solid #222; font-size: 13px; white-space: pre-wrap; }
         .rtl { direction: rtl; text-align: right; border-right: 4px solid var(--cyan); }
+        #screen::-webkit-scrollbar { width: 0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -51,16 +56,17 @@
         <div class="sb-nav">
             <div class="nav-group">Academy</div>
             <div class="nav-btn">🌍 Languages</div>
-            <div class="nav-btn">♟️ Chess</div>
-            <div class="nav-btn">🎸 Music</div>
-            <div class="nav-group">Pro</div>
-            <div class="nav-btn">⚽ Football</div>
-            <div class="nav-btn">🛠️ Luau</div>
-            <div class="nav-btn" onclick="wipe()" style="color:#ff5555; margin-top:30px;">Wipe Memory</div>
+            <div class="nav-btn">♟️ Chess Lab</div>
+            <div class="nav-btn">🎸 Music Theory</div>
+            <div class="nav-group">Pro Sports</div>
+            <div class="nav-btn">⚽ Global Football</div>
+            <div class="nav-group">Tech</div>
+            <div class="nav-btn">🛠️ Luau Scripting</div>
+            <div class="nav-btn" onclick="wipe()" style="color:#ff4444; margin-top:30px; border-top: 1px solid #222; padding-top:20px;">Wipe Memory</div>
         </div>
         <div class="credits">
             <span class="ap-logo">Ayham Projects (AP)</span>
-            <div class="cr-text">Copyright 2026<br>Disclaimer: Nova Is Powered By Gemini 3</div>
+            <div class="cr-text">CEO: Ayham Habbad<br>Powered by Gemini 3.1</div>
         </div>
     </div>
 
@@ -73,9 +79,9 @@
         </div>
 
         <div class="bottom-section">
-            <div class="ai-warning">Nova Is An AI It Can Make Mistakes Double Check For Important Things</div>
+            <div class="ai-warning">Nova 4.0 // System Operating At Peak Efficiency</div>
             <div id="input-area">
-                <input type="text" id="user-input" placeholder="Start your lesson..." autocomplete="off">
+                <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off">
                 <button id="send">➤</button>
             </div>
         </div>
@@ -89,54 +95,68 @@
 
         function setMode(m) {
             currentMode = m;
-            document.getElementById('fast-mode').className = m === 'fast' ? 'mode-chip active' : 'mode-chip';
-            document.getElementById('think-mode').className = m === 'think' ? 'mode-chip active' : 'mode-chip';
+            document.getElementById('fast-mode').classList.toggle('active', m === 'fast');
+            document.getElementById('think-mode').classList.toggle('active', m === 'think');
         }
 
         window.onload = () => {
-            const h = JSON.parse(localStorage.getItem('nova4_save')) || [];
-            if(h.length === 0) appendMsg("<b>Nova:</b> System Online. Created by <b>Ayham Habbad</b>. How can I help you today?", 'nova');
-            else h.forEach(m => { appendMsg(m.q, 'user'); appendMsg(`<b>Nova:</b> ${m.a}`, 'nova'); });
+            const history = JSON.parse(localStorage.getItem('nova4_final')) || [];
+            if(history.length === 0) {
+                appendMsg("<b>Nova:</b> System initialized. Engineered by Ayham Projects. Ready for instructions.", 'nova');
+            } else {
+                history.forEach(m => { appendMsg(m.q, 'user'); appendMsg(`<b>Nova:</b> ${m.a}`, 'nova'); });
+            }
         };
 
         async function askNova() {
             const q = userInput.value.trim();
             if(!q) return;
+
             appendMsg(q, 'user');
             userInput.value = '';
 
-            // CE0 Identity Hard-Coding
-            const lowerQ = q.toLowerCase();
-            if (lowerQ.includes("who made you") || lowerQ.includes("who created you")) {
-                const response = "I am Nova 4.0, engineered by a team of linguistic architects, grandmasters, and rhythm-smiths. I’m built for rapid-fire intelligence—whether we’re analyzing a Sicilian Defense, mastering a new language, or setting up a Luau. My CEO Is Ayham Habbad, Wanna Know More About Him?";
-                appendMsg(`<b>Nova:</b><br>${response}`, 'nova');
-                save(q, response);
+            // Identity Protocols (Hard-Coded)
+            const lowQ = q.toLowerCase();
+            if (lowQ.includes("who made you") || lowQ.includes("who created you")) {
+                const text = "I am Nova 4.0, engineered by a team of linguistic architects, grandmasters, and rhythm-smiths. I’m built for rapid-fire intelligence—whether we’re analyzing a Sicilian Defense, mastering a new language, or setting up a Luau. My CEO Is Ayham Habbad, Wanna Know More About Him? What’s on the agenda?";
+                appendMsg(`<b>Nova:</b><br>${text}`, 'nova');
+                save(q, text);
                 return;
             }
 
-            if (lowerQ.includes("know more about him") || lowerQ.includes("who is the ceo") || lowerQ.includes("who is ayham")) {
-                const response = "Ayham Habbad Born: Salé (some say Rabat) Morocco. Birthday: 22/9/2015. He’s the CEO and Creator of Ayham Projects. He’s a student at El Yakada 2 Salé and he’s a Roblox YouTuber and Developer. We will provide more information in the future.";
-                appendMsg(`<b>Nova:</b><br>${response}`, 'nova');
-                save(q, response);
+            if (lowQ.includes("know more about him") || lowQ.includes("who is the ceo") || (lowQ.includes("who") && lowQ.includes("ayham"))) {
+                const text = "Ayham Habbad Born : Salé ( some say Rabat ) Morocco Birth Day : 22/9/2015 Hes. The CEO And Creator Of Ayham Projects He’s A Student At El Yakada 2 Salé And He’s A Roblox YouTuber And Developer . We Will Provide More Informations In Future .";
+                appendMsg(`<b>Nova:</b><br>${text}`, 'nova');
+                save(q, text);
                 return;
             }
 
-            const loading = appendMsg(currentMode === 'think' ? "Nova is thinking..." : "...", 'nova');
+            const loading = appendMsg(currentMode === 'think' ? "Analyzing data..." : "...", 'nova');
 
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${API_KEY}`, {
+                // Using Gemini 3.1 Flash-Lite (Preview)
+                const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${API_KEY}`;
+                
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        contents: [{ parts: [{ text: `Mode: ${currentMode.toUpperCase()}. You are Nova 4.0. CEO is Ayham Habbad (Ayham Projects). Teacher of Languages, Chess, Music, Football, and Luau. Input: ${q}` }] }] 
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `System: Act as Nova 4.0. CEO is Ayham Habbad. Mode: ${currentMode}. Answer precisely. Query: ${q}` }] }]
                     })
                 });
-                const data = await res.json();
-                let a = data.candidates[0].content.parts[0].text;
-                a = a.replace(/```(.*?)\n([\s\S]*?)```/g, '<div class="code-box">$2</div>');
-                loading.innerHTML = `<b>Nova:</b><br>${a}`;
-                save(q, a);
-            } catch(e) { loading.innerHTML = `<b style="color:red;">Error.</b>`; }
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error?.message || "Link Error");
+
+                let answer = data.candidates[0].content.parts[0].text;
+                answer = answer.replace(/```(.*?)\n([\s\S]*?)```/g, '<div class="code-box">$2</div>');
+                
+                loading.innerHTML = `<b>Nova:</b><br>${answer}`;
+                save(q, answer);
+
+            } catch(e) {
+                loading.innerHTML = `<b style="color:#ff4444;">SYSTEM ERROR:</b><br>${e.message}`;
+            }
         }
 
         function appendMsg(t, type) {
@@ -149,12 +169,14 @@
         }
 
         function save(q, a) {
-            let h = JSON.parse(localStorage.getItem('nova4_save')) || [];
-            h.push({q, a});
-            localStorage.setItem('nova4_save', JSON.stringify(h));
+            let history = JSON.parse(localStorage.getItem('nova4_final')) || [];
+            history.push({q, a});
+            if(history.length > 20) history.shift();
+            localStorage.setItem('nova4_final', JSON.stringify(history));
         }
 
-        function wipe() { if(confirm("Clear memory?")) { localStorage.clear(); location.reload(); } }
+        function wipe() { if(confirm("Wipe Nova's memory?")) { localStorage.clear(); location.reload(); } }
+
         document.getElementById('send').onclick = askNova;
         userInput.onkeypress = (e) => { if(e.key === 'Enter') askNova(); };
     </script>
