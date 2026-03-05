@@ -79,19 +79,31 @@
         const userInput = document.getElementById('user-input');
         let currentMode = 'fast';
 
-        // SECURITY GUARD: Redirects to YouTube if Inspect is opened
-        setInterval(() => {
-            const devtools = /./;
-            devtools.toString = function() {
-                window.location.href = "https://www.youtube.com";
-            };
-            console.log('%c', devtools);
+// NEW: iPad-Safe Security Guard (No more accidental YouTube redirects)
+const securityGuard = () => {
+    // 1. The Debugger Trap (Silent & Deadly for hackers)
+    const start = performance.now();
+    debugger; // This only "pauses" if Inspect is open
+    const end = performance.now();
+    
+    // If it took more than 100ms to pass the "debugger" line, 
+    // it means someone is definitely inspecting the code.
+    if (end - start > 100) {
+        window.location.href = "https://www.youtube.com";
+    }
 
-            const threshold = 160;
-            if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
-                window.location.href = "https://www.youtube.com";
-            }
-        }, 1000);
+    // 2. Smart Resize Check
+    // We only trigger if the window is extremely narrow (Split View Hack)
+    if (window.innerWidth < 300 && window.innerWidth > 50) {
+        window.location.href = "https://www.youtube.com";
+    }
+};
+
+// Check every 2 seconds (less aggressive for iPad battery)
+setInterval(securityGuard, 2000);
+
+// Keep the right-click and hotkey blocks
+document.addEventListener('contextmenu', e => e.preventDefault());
 
         // Disable Context Menu & Hotkeys
         document.addEventListener('contextmenu', e => e.preventDefault());
