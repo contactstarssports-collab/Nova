@@ -2,107 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>NOVA 4.0 | AP</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --cyan: #00f2ff; 
-            --bg: #050507; 
-            --panel: #0a0a0c; 
-            --glass: rgba(255, 255, 255, 0.03); 
-            --user-blue: #007aff;
-        }
-        
-        body { 
-            margin: 0; background: var(--bg); color: white; 
-            font-family: 'Inter', sans-serif; display: flex; 
-            height: 100vh; overflow: hidden; 
-        }
+        :root { --cyan: #00f2ff; --bg: #050507; --panel: #0a0a0c; --glass: rgba(255, 255, 255, 0.03); --user-blue: #007aff; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Inter', sans-serif; display: flex; height: 100dvh; width: 100vw; overflow: hidden; }
 
-        /* Sidebar Styling */
-        #sidebar { 
-            width: 280px; background: var(--panel); 
-            border-right: 1px solid #1a1a1a; display: flex; 
-            flex-direction: column; flex-shrink: 0; 
-        }
-        
-        .sb-header { 
-            padding: 30px 20px; font-family: 'Outfit', sans-serif; 
-            font-size: 26px; font-weight: 800; color: var(--cyan); 
-            border-bottom: 1px solid #111; letter-spacing: -0.5px; 
-        }
-        
-        .sb-nav { flex: 1; padding: 15px; }
-        .nav-btn { 
-            padding: 12px 15px; border-radius: 10px; cursor: pointer; 
-            color: #888; font-size: 14px; margin-bottom: 8px; 
-            transition: all 0.2s ease; font-weight: 500;
-        }
-        .nav-btn:hover { background: var(--glass); color: white; transform: translateX(5px); }
-        
-        /* Credits & Disclaimer */
+        /* Sidebar */
+        #sidebar { width: 280px; background: var(--panel); border-right: 1px solid #1a1a1a; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sb-header { padding: 30px 20px; font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; color: var(--cyan); border-bottom: 1px solid #111; }
+        .sb-nav { flex: 1; padding: 15px; overflow-y: auto; }
+        .nav-group { color: #444; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin: 15px 0 8px 5px; }
+        .nav-btn { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: #888; font-size: 14px; margin-bottom: 4px; transition: 0.2s; font-weight: 500; }
+        .nav-btn:hover { background: var(--glass); color: white; }
+
+        /* Credits */
         .credits { padding: 25px 20px; background: #070709; border-top: 1px solid #1a1a1a; }
-        .ap-logo { 
-            color: var(--cyan); font-family: 'Outfit', sans-serif; 
-            font-weight: 700; font-size: 15px; display: block; margin-bottom: 6px; 
-        }
-        .cr-text { font-size: 11px; color: #555; line-height: 1.5; font-weight: 400; }
+        .ap-logo { color: var(--cyan); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px; display: block; margin-bottom: 6px; }
+        .cr-text { font-size: 11px; color: #555; line-height: 1.5; }
 
-        /* Main Chat Layout */
-        #main { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; }
-        #screen { 
-            flex: 1; overflow-y: auto; padding: 30px; 
-            display: flex; flex-direction: column; gap: 24px; 
-        }
-        
-        .bubble { 
-            padding: 16px 20px; border-radius: 18px; max-width: 80%; 
-            line-height: 1.6; font-size: 16px; font-weight: 400;
-            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .nova { 
-            background: var(--glass); border: 1px solid rgba(0, 242, 255, 0.1); 
-            align-self: flex-start; color: #e0faff; border-bottom-left-radius: 4px;
-        }
-        .user { 
-            background: var(--user-blue); align-self: flex-end; 
-            color: white; border-bottom-right-radius: 4px; 
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-        }
+        /* Main & Chat */
+        #main { flex: 1; display: flex; flex-direction: column; background: var(--bg); overflow: hidden; position: relative; }
+        #screen { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 30px 20px; display: flex; flex-direction: column; gap: 24px; }
+        .bubble { padding: 16px 20px; border-radius: 18px; max-width: 85%; line-height: 1.6; font-size: 16px; animation: fadeIn 0.3s ease-out; }
+        .nova { background: var(--glass); border: 1px solid rgba(0, 242, 255, 0.1); align-self: flex-start; color: #e0faff; border-bottom-left-radius: 4px; }
+        .user { background: var(--user-blue); align-self: flex-end; color: white; border-bottom-right-radius: 4px; }
 
-        /* Bottom Section */
-        .bottom-section { background: var(--panel); border-top: 1px solid #1a1a1a; }
-        .ai-warning { 
-            font-size: 10px; color: #444; text-align: center; padding: 12px 0; 
-            border-bottom: 1px solid #111; text-transform: uppercase; 
-            letter-spacing: 1.2px; font-weight: 600; font-family: 'Outfit', sans-serif;
-        }
-        
-        #input-area { padding: 20px 25px; display: flex; gap: 15px; align-items: center; }
-        input { 
-            flex: 1; background: #121217; border: 1px solid #222; 
-            border-radius: 14px; padding: 16px 20px; color: white; 
-            outline: none; font-size: 16px; font-family: 'Inter', sans-serif;
-            transition: all 0.2s; 
-        }
-        input:focus { border-color: var(--cyan); background: #16161c; box-shadow: 0 0 0 2px rgba(0, 242, 255, 0.1); }
-        
-        #send { 
-            background: var(--cyan); border: none; border-radius: 14px; 
-            width: 60px; height: 54px; font-weight: bold; cursor: pointer; 
-            transition: all 0.2s; display: flex; align-items: center; justify-content: center;
-        }
-        #send:hover { opacity: 0.9; transform: translateY(-1px); }
+        /* MODE TOGGLE */
+        .controls-row { display: flex; justify-content: center; padding: 10px; background: #08080a; gap: 10px; border-top: 1px solid #1a1a1a; }
+        .mode-chip { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid #222; color: #555; transition: 0.2s; }
+        .mode-chip.active { background: var(--cyan); color: black; border-color: var(--cyan); box-shadow: 0 0 10px rgba(0,242,255,0.3); }
 
-        .code-box { 
-            background: #000; padding: 15px; border-radius: 10px; 
-            font-family: 'JetBrains Mono', monospace; color: #4ade80; 
-            margin: 12px 0; overflow-x: auto; border: 1px solid #222; font-size: 14px; 
-        }
-        .rtl { direction: rtl; text-align: right; border-left: none; border-right: 4px solid var(--cyan); }
+        .bottom-section { background: var(--panel); flex-shrink: 0; }
+        .ai-warning { font-size: 10px; color: #444; text-align: center; padding: 10px; text-transform: uppercase; font-family: 'Outfit', sans-serif; letter-spacing: 1px; }
+        #input-area { padding: 15px 20px; display: flex; gap: 12px; align-items: center; max-width: 1000px; margin: 0 auto; width: 100%; }
+        input { flex: 1; background: #121217; border: 1px solid #222; border-radius: 14px; padding: 15px; color: white; outline: none; font-size: 16px; }
+        #send { background: var(--cyan); border: none; border-radius: 14px; width: 55px; height: 50px; font-weight: bold; cursor: pointer; font-size: 20px; }
+
+        .code-box { background: #000; padding: 15px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; color: #4ade80; margin: 12px 0; overflow-x: auto; border: 1px solid #222; font-size: 13px; }
+        .rtl { direction: rtl; text-align: right; border-right: 4px solid var(--cyan); }
     </style>
 </head>
 <body>
@@ -110,29 +49,33 @@
     <div id="sidebar">
         <div class="sb-header">NOVA 4.0</div>
         <div class="sb-nav">
-            <div class="nav-btn">💬 Chat Archive</div>
-            <div class="nav-btn">⚽ Botola Pro Stats</div>
-            <div class="nav-btn">🛠️ Luau Scripting</div>
-            <div class="nav-btn" onclick="wipe()" style="color:#ff5555; margin-top:30px; opacity:0.8;">Clear Memory</div>
+            <div class="nav-group">Academy</div>
+            <div class="nav-btn">🌍 Languages</div>
+            <div class="nav-btn">♟️ Chess</div>
+            <div class="nav-btn">🎸 Music</div>
+            <div class="nav-group">Pro</div>
+            <div class="nav-btn">⚽ Football</div>
+            <div class="nav-btn">🛠️ Luau</div>
+            <div class="nav-btn" onclick="wipe()" style="color:#ff5555; margin-top:30px;">Wipe Memory</div>
         </div>
         <div class="credits">
             <span class="ap-logo">Ayham Projects (AP)</span>
-            <div class="cr-text">
-                Copyright 2026<br>
-                Disclaimer: Nova Is Powered By Gemini 3
-            </div>
+            <div class="cr-text">Copyright 2026<br>Disclaimer: Nova Is Powered By Gemini 3</div>
         </div>
     </div>
 
     <div id="main">
         <div id="screen"></div>
         
+        <div class="controls-row">
+            <div id="fast-mode" class="mode-chip active" onclick="setMode('fast')">FAST MODE</div>
+            <div id="think-mode" class="mode-chip" onclick="setMode('think')">THINKING MODE</div>
+        </div>
+
         <div class="bottom-section">
-            <div class="ai-warning">
-                Nova Is An AI It Can Make Mistakes Double Check For Important Things
-            </div>
+            <div class="ai-warning">Nova Is An AI It Can Make Mistakes Double Check For Important Things</div>
             <div id="input-area">
-                <input type="text" id="user-input" placeholder="Ask Nova anything..." autocomplete="off">
+                <input type="text" id="user-input" placeholder="Enter message..." autocomplete="off">
                 <button id="send">➤</button>
             </div>
         </div>
@@ -142,55 +85,49 @@
         const API_KEY = "AIzaSyAAob-TmIZDfZplzXqq1yb0WI_bCK8po4o";
         const screen = document.getElementById('screen');
         const userInput = document.getElementById('user-input');
+        let currentMode = 'fast';
+
+        function setMode(m) {
+            currentMode = m;
+            document.getElementById('fast-mode').className = m === 'fast' ? 'mode-chip active' : 'mode-chip';
+            document.getElementById('think-mode').className = m === 'think' ? 'mode-chip active' : 'mode-chip';
+        }
 
         window.onload = () => {
             const h = JSON.parse(localStorage.getItem('nova4_save')) || [];
-            if(h.length === 0) {
-                appendMsg("<b>Nova:</b> Uplink complete. System 4.0 is now active with high-fidelity fonts. Ready for your instructions.", 'nova');
-            } else {
-                h.forEach(m => { appendMsg(m.q, 'user'); appendMsg(`<b>Nova:</b> ${m.a}`, 'nova'); });
-            }
+            if(h.length === 0) appendMsg("<b>Nova:</b> System Online. Toggle <b>Thinking Mode</b> for complex Chess or Code problems.", 'nova');
+            else h.forEach(m => { appendMsg(m.q, 'user'); appendMsg(`<b>Nova:</b> ${m.a}`, 'nova'); });
         };
 
         async function askNova() {
             const q = userInput.value.trim();
             if(!q) return;
-            
             appendMsg(q, 'user');
             userInput.value = '';
-            
-            // Fast Mode: Instant subtle indicator
-            const loading = appendMsg("...", 'nova');
+            const loading = appendMsg(currentMode === 'think' ? "Nova is thinking..." : "...", 'nova');
 
             try {
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `You are Nova 4.0, a teacher. Expert in Roblox Luau and Botola Pro Football. Respond in Arabic if asked. Message: ${q}` }] }]
+                    body: JSON.stringify({ 
+                        contents: [{ parts: [{ text: `Mode: ${currentMode.toUpperCase()}. You are Nova 4.0. Teacher of Languages, Chess, Music, Football, and Luau. Response must match the requested mode speed/depth. Input: ${q}` }] }] 
                     })
                 });
                 const data = await res.json();
-                
-                if(data.error) throw new Error(data.error.message);
-                
                 let a = data.candidates[0].content.parts[0].text;
                 a = a.replace(/```(.*?)\n([\s\S]*?)```/g, '<div class="code-box">$2</div>');
-                
                 loading.innerHTML = `<b>Nova:</b><br>${a}`;
                 save(q, a);
-            } catch(e) { 
-                loading.innerHTML = `<b style="color:#ff4444;">SYSTEM ERROR:</b> Uplink failed. Check connection.`; 
-            }
+            } catch(e) { loading.innerHTML = `<b style="color:red;">Error.</b>`; }
         }
 
         function appendMsg(t, type) {
             const d = document.createElement('div');
-            const isAr = /[\u0600-\u06FF]/.test(t);
-            d.className = `bubble ${type} ${isAr ? 'rtl' : ''}`;
+            d.className = `bubble ${type} ${/[\u0600-\u06FF]/.test(t) ? 'rtl' : ''}`;
             d.innerHTML = t;
             screen.appendChild(d);
-            screen.scrollTop = screen.scrollHeight;
+            screen.scrollTo({ top: screen.scrollHeight, behavior: 'smooth' });
             return d;
         }
 
@@ -200,10 +137,10 @@
             localStorage.setItem('nova4_save', JSON.stringify(h));
         }
 
-        function wipe() { if(confirm("Permanently wipe memory?")) { localStorage.clear(); location.reload(); } }
-
+        function wipe() { if(confirm("Clear memory?")) { localStorage.clear(); location.reload(); } }
         document.getElementById('send').onclick = askNova;
         userInput.onkeypress = (e) => { if(e.key === 'Enter') askNova(); };
     </script>
 </body>
 </html>
+
