@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --cyan: #00f2ff; --bg: #050507; --panel: #0a0a0c; --glass: rgba(255, 255, 255, 0.03); --user-blue: #007aff; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: white; font-family: 'Inter', sans-serif; display: flex; height: 100dvh; width: 100vw; overflow: hidden; }
 
         /* Sidebar */
@@ -17,24 +17,24 @@
         .nav-btn { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: #888; font-size: 14px; margin-bottom: 4px; transition: 0.2s; font-weight: 500; }
         .nav-btn:hover { background: var(--glass); color: white; }
 
-        /* Main */
+        /* Main Chat Area */
         #main { flex: 1; display: flex; flex-direction: column; background: var(--bg); overflow: hidden; position: relative; }
         #screen { flex: 1; overflow-y: auto; padding: 30px 20px; display: flex; flex-direction: column; gap: 24px; }
         .bubble { padding: 16px 20px; border-radius: 18px; max-width: 85%; line-height: 1.6; font-size: 16px; animation: fadeIn 0.2s ease-out; }
         .nova { background: var(--glass); border: 1px solid rgba(0, 242, 255, 0.1); align-self: flex-start; color: #e0faff; border-bottom-left-radius: 4px; }
         .user { background: var(--user-blue); align-self: flex-end; color: white; border-bottom-right-radius: 4px; }
 
-        /* Controls */
+        /* Mode Toggle */
         .controls-row { display: flex; justify-content: center; padding: 10px; background: #08080a; gap: 10px; border-top: 1px solid #1a1a1a; }
         .mode-chip { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid #222; color: #555; transition: 0.2s; }
         .mode-chip.active { background: var(--cyan); color: black; border-color: var(--cyan); box-shadow: 0 0 10px rgba(0,242,255,0.3); }
 
         .bottom-section { background: var(--panel); flex-shrink: 0; }
         #input-area { padding: 15px 20px; display: flex; gap: 12px; align-items: center; max-width: 1000px; margin: 0 auto; width: 100%; }
-        input { flex: 1; background: #121217; border: 1px solid #222; border-radius: 14px; padding: 15px; color: white; outline: none; font-size: 16px; user-select: text !important; }
+        input { flex: 1; background: #121217; border: 1px solid #222; border-radius: 14px; padding: 15px; color: white; outline: none; font-size: 16px; }
         #send { background: var(--cyan); border: none; border-radius: 14px; width: 55px; height: 50px; font-weight: bold; cursor: pointer; font-size: 20px; }
 
-        .code-box { background: #000; padding: 15px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; color: #4ade80; margin: 12px 0; overflow-x: auto; border: 1px solid #222; font-size: 13px; user-select: text !important; }
+        .code-box { background: #000; padding: 15px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; color: #4ade80; margin: 12px 0; overflow-x: auto; border: 1px solid #222; font-size: 13px; }
         .rtl { direction: rtl; text-align: right; border-right: 4px solid var(--cyan); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -51,7 +51,7 @@
             <div class="nav-btn">🛠️ Luau Scripting</div>
         </div>
         <div class="credits" style="padding: 25px 20px; background: #070709; border-top: 1px solid #1a1a1a;">
-            <span style="color: var(--cyan); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px;">Ayham Projects (AP)</span>
+            <span style="color: var(--cyan); font-family: 'Outfit', sans-serif; font-weight: 700;">Ayham Projects (AP)</span>
             <div style="font-size: 10px; color: #555; margin-top: 5px;">CEO: Ayham Habbad<br>Born: Salé, Morocco</div>
         </div>
     </div>
@@ -64,22 +64,77 @@
         </div>
         <div class="bottom-section">
             <div id="input-area">
-                <input type="text" id="user-input" placeholder="Nova is protected..." autocomplete="off">
+                <input type="text" id="user-input" placeholder="Nova is ready..." autocomplete="off">
                 <button id="send">➤</button>
             </div>
         </div>
     </div>
 
     <script>
-        // OBFUSCATION LAYER: Pieces of your key hidden from bots
+        // API KEY SECTION
         const _a = "AIzaSyAA"; const _b = "AR5nieU4"; const _c = "pdtFl_cu"; const _d = "JtfFVXIC58MEG6I";
         const CORE_KEY = _a + _b + _c + _d;
 
         const screen = document.getElementById('screen');
         const userInput = document.getElementById('user-input');
         let currentMode = 'fast';
+
+        // ALL SECURITY REDIRECTS HAVE BEEN REMOVED PER CEO ORDERS
+
+        function setMode(m) {
+            currentMode = m;
+            document.getElementById('fast-mode').classList.toggle('active', m === 'fast');
+            document.getElementById('think-mode').classList.toggle('active', m === 'think');
+        }
+
+        async function askNova() {
+            const q = userInput.value.trim();
+            if(!q) return;
+            appendMsg(q, 'user');
+            userInput.value = '';
+
+            // Identity Protocols
+            const lowQ = q.toLowerCase();
+            if (lowQ.includes("who made you")) {
+                const text = "I am Nova 4.0, engineered by Ayham Projects. My CEO Is Ayham Habbad. Wanna Know More About Him?";
+                appendMsg(`<b>Nova:</b><br>${text}`, 'nova');
+                return;
+            }
+
+            const loading = appendMsg("...", 'nova');
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${CORE_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `Act as Nova 4.0. CEO: Ayham Habbad. Mode: ${currentMode}. Query: ${q}` }] }]
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error?.message || "Check Key Status");
+
+                let a = data.candidates[0].content.parts[0].text;
+                a = a.replace(/```(.*?)\n([\s\S]*?)```/g, '<div class="code-box">$2</div>');
+                loading.innerHTML = `<b>Nova:</b><br>${a}`;
+            } catch(e) { 
+                loading.innerHTML = `<b style="color:red;">SYSTEM ERROR:</b><br>${e.message}`; 
+            }
+        }
+
+        function appendMsg(t, type) {
+            const d = document.createElement('div');
+            d.className = `bubble ${type} ${/[\u0600-\u06FF]/.test(t) ? 'rtl' : ''}`;
+            d.innerHTML = t;
+            screen.appendChild(d);
+            screen.scrollTo({ top: screen.scrollHeight, behavior: 'smooth' });
+            return d;
+        }
+
         document.getElementById('send').onclick = askNova;
         userInput.onkeypress = (e) => { if(e.key === 'Enter') askNova(); };
     </script>
 </body>
 </html>
+
