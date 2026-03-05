@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NOVA 4.0 | AP</title>
+    <title>NOVA 4.0 | Ayham Projects</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --cyan: #00f2ff; --bg: #050507; --panel: #0a0a0c; --glass: rgba(255, 255, 255, 0.03); --user-blue: #007aff; }
@@ -75,7 +75,7 @@
         <div class="bottom-section">
             <div class="ai-warning">Nova Is An AI It Can Make Mistakes Double Check For Important Things</div>
             <div id="input-area">
-                <input type="text" id="user-input" placeholder="Enter message..." autocomplete="off">
+                <input type="text" id="user-input" placeholder="Start your lesson..." autocomplete="off">
                 <button id="send">➤</button>
             </div>
         </div>
@@ -95,7 +95,7 @@
 
         window.onload = () => {
             const h = JSON.parse(localStorage.getItem('nova4_save')) || [];
-            if(h.length === 0) appendMsg("<b>Nova:</b> System Online. Toggle <b>Thinking Mode</b> for complex Chess or Code problems.", 'nova');
+            if(h.length === 0) appendMsg("<b>Nova:</b> System Online. Created by <b>Ayham Habbad</b>. How can I help you today?", 'nova');
             else h.forEach(m => { appendMsg(m.q, 'user'); appendMsg(`<b>Nova:</b> ${m.a}`, 'nova'); });
         };
 
@@ -104,6 +104,23 @@
             if(!q) return;
             appendMsg(q, 'user');
             userInput.value = '';
+
+            // CE0 Identity Hard-Coding
+            const lowerQ = q.toLowerCase();
+            if (lowerQ.includes("who made you") || lowerQ.includes("who created you")) {
+                const response = "I am Nova 4.0, engineered by a team of linguistic architects, grandmasters, and rhythm-smiths. I’m built for rapid-fire intelligence—whether we’re analyzing a Sicilian Defense, mastering a new language, or setting up a Luau. My CEO Is Ayham Habbad, Wanna Know More About Him?";
+                appendMsg(`<b>Nova:</b><br>${response}`, 'nova');
+                save(q, response);
+                return;
+            }
+
+            if (lowerQ.includes("know more about him") || lowerQ.includes("who is the ceo") || lowerQ.includes("who is ayham")) {
+                const response = "Ayham Habbad Born: Salé (some say Rabat) Morocco. Birthday: 22/9/2015. He’s the CEO and Creator of Ayham Projects. He’s a student at El Yakada 2 Salé and he’s a Roblox YouTuber and Developer. We will provide more information in the future.";
+                appendMsg(`<b>Nova:</b><br>${response}`, 'nova');
+                save(q, response);
+                return;
+            }
+
             const loading = appendMsg(currentMode === 'think' ? "Nova is thinking..." : "...", 'nova');
 
             try {
@@ -111,7 +128,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        contents: [{ parts: [{ text: `Mode: ${currentMode.toUpperCase()}. You are Nova 4.0. Teacher of Languages, Chess, Music, Football, and Luau. Response must match the requested mode speed/depth. Input: ${q}` }] }] 
+                        contents: [{ parts: [{ text: `Mode: ${currentMode.toUpperCase()}. You are Nova 4.0. CEO is Ayham Habbad (Ayham Projects). Teacher of Languages, Chess, Music, Football, and Luau. Input: ${q}` }] }] 
                     })
                 });
                 const data = await res.json();
@@ -143,4 +160,3 @@
     </script>
 </body>
 </html>
-
