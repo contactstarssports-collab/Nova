@@ -3,136 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA | Teacher System 2026</title>
+    <title>NOVA 4.0</title>
     <style>
-        :root { --cyan: #00f2ff; --bg: #050507; --panel: #111116; --user-blue: #007aff; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', system-ui, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        :root { --cyan: #00f2ff; --bg: #050507; --glass: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; overflow: hidden; height: 100vh; }
         
-        header { background: var(--panel); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-        #settings-menu { display: none; position: absolute; top: 60px; right: 20px; background: #1a1a20; padding: 15px; border-radius: 8px; z-index: 100; border: 1px solid #333; }
+        /* Sidebar & Navigation */
+        #sidebar { width: 280px; background: #0a0a0c; border-right: 1px solid #222; display: flex; flex-direction: column; transition: 0.3s; }
+        .sidebar-header { padding: 20px; font-weight: bold; color: var(--cyan); border-bottom: 1px solid #222; font-size: 18px; }
+        .nav-item { padding: 15px; border-bottom: 1px solid #1a1a1a; cursor: pointer; font-size: 13px; color: #888; }
+        .nav-item:hover { background: var(--glass); color: white; }
         
-        #screen { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 18px; padding-bottom: 120px; }
-        .bubble { padding: 14px 18px; border-radius: 15px; max-width: 85%; line-height: 1.6; font-size: 16px; position: relative; animation: slideIn 0.2s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* Credits & Copyright Section */
+        .credits-section { margin-top: auto; padding: 20px; border-top: 1px solid #222; background: #08080a; }
+        .credits-text { font-size: 11px; color: #666; line-height: 1.6; }
+        .ap-brand { color: var(--cyan); font-weight: bold; font-size: 12px; display: block; margin-bottom: 4px; }
 
-        .nova { background: rgba(0, 242, 255, 0.05); border-left: 4px solid var(--cyan); align-self: flex-start; color: #e0faff; }
-        .user { background: var(--user-blue); align-self: flex-end; border-bottom-right-radius: 2px; }
+        /* Main Chat Area */
+        #main { flex: 1; display: flex; flex-direction: column; position: relative; }
+        #screen { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { padding: 14px; border-radius: 12px; max-width: 80%; line-height: 1.5; font-size: 15px; }
+        .nova { background: var(--glass); border-left: 3px solid var(--cyan); align-self: flex-start; }
+        .user { background: #007aff; align-self: flex-end; }
         
-        .speak-btn { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-top: 10px; display: inline-block; }
-        .rtl { direction: rtl; text-align: right; border-left: none; border-right: 4px solid var(--cyan); }
+        /* AI Disclaimer at bottom of chat */
+        .disclaimer-bar { text-align: center; font-size: 10px; color: #555; padding: 10px; border-top: 1px solid #111; background: #050507; }
 
-        #input-area { background: #0c0c0f; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #222; position: fixed; bottom: 0; width: 100%; box-sizing: border-box; }
-        input { flex: 1; background: #16161a; border: 1px solid #333; border-radius: 25px; padding: 12px 20px; color: white; outline: none; font-size: 16px; }
-        button#send { background: var(--cyan); border: none; border-radius: 50%; width: 48px; height: 48px; cursor: pointer; font-size: 20px; }
+        /* Input Area */
+        #input-area { padding: 15px; background: #0a0a0c; display: flex; gap: 10px; border-top: 1px solid #222; }
+        input { flex: 1; background: #16161a; border: 1px solid #333; border-radius: 10px; padding: 12px; color: white; outline: none; }
+        #send { background: var(--cyan); border: none; border-radius: 10px; width: 50px; font-weight: bold; cursor: pointer; }
+
+        .code-block { background: #000; padding: 10px; border-radius: 5px; font-family: monospace; color: #0f0; margin: 10px 0; border: 1px solid #333; font-size: 13px; }
+        .rtl { direction: rtl; text-align: right; }
     </style>
 </head>
 <body>
 
-    <header>
-        <span style="color:var(--cyan); font-weight:bold; letter-spacing:2px;">NOVA v3.2 [GEMINI 3]</span>
-        <button onclick="toggleSettings()" style="background:#222; border:1px solid #444; color:white; padding:6px 12px; border-radius:6px; font-size:12px;">SETTINGS</button>
-        <div id="settings-menu">
-            <button onclick="clearHistory()" style="background:#ff4444; color:white; border:none; padding:10px; width:100%; border-radius:4px; font-weight:bold;">WIPE DATA</button>
+    <div id="sidebar">
+        <div class="sidebar-header">NOVA 4.0</div>
+        <div class="nav-item">💬 Chat Sessions</div>
+        <div class="nav-item">💻 Code Sandbox</div>
+        <div class="nav-item" onclick="clearAll()" style="color: #ff4444;">Wipe Memory</div>
+        
+        <div class="credits-section">
+            <span class="ap-brand">Ayham Projects (AP)</span>
+            <div class="credits-text">
+                Copyright 2026<br>
+                Disclaimer: Nova is powered by Gemini 3
+            </div>
         </div>
-    </header>
+    </div>
 
-    <div id="screen"></div>
+    <div id="main">
+        <div id="screen"></div>
+        
+        <div class="disclaimer-bar">
+            Nova Is An AI It Can Make Mistakes Double Check For Important Things
+        </div>
 
-    <div id="input-area">
-        <input type="text" id="user-input" placeholder="Ask Nova anything..." autocomplete="off">
-        <button id="send">➤</button>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off">
+            <button id="send">></button>
+        </div>
     </div>
 
     <script>
-        const API_KEY = "AIzaSyAAob-TmIZDfZplzXqq1yb0WI_bCK8po4o"; // <--- YOUR KEY IS HERE
+        const API_KEY = "AIzaSyAAob-TmIZDfZplzXqq1yb0WI_bCK8po4o";
         const screen = document.getElementById('screen');
         const userInput = document.getElementById('user-input');
-        const sendBtn = document.getElementById('send');
 
         window.onload = () => {
-            const logs = JSON.parse(localStorage.getItem('nova_2026_save')) || [];
-            if (logs.length === 0) {
-                appendMsg("<b>Nova:</b> System Re-linked. I am now running on the <b>Gemini 3 Flash</b> engine. Your Luau, Football, and Language data is ready.", 'nova');
+            const history = JSON.parse(localStorage.getItem('nova_v4_history')) || [];
+            if(history.length === 0) {
+                appendMsg("System Online. NOVA 4.0 Ready.", 'nova');
             } else {
-                logs.forEach(log => {
-                    appendMsg(log.q, 'user');
-                    appendMsg(`<b>Nova:</b> ${log.a}`, 'nova');
+                history.forEach(h => {
+                    appendMsg(h.q, 'user');
+                    appendMsg(h.a, 'nova');
                 });
             }
         };
 
         async function askNova() {
-            const msg = userInput.value.trim();
-            if (!msg) return;
-
-            appendMsg(msg, 'user');
+            const val = userInput.value.trim();
+            if(!val) return;
+            
+            appendMsg(val, 'user');
             userInput.value = '';
-            const loading = appendMsg("Nova is analyzing via Gemini 3...", 'nova');
+            const loading = appendMsg("Analyzing...", 'nova');
 
             try {
-                // UPDATED MODEL NAME FOR 2026
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: `You are Nova, an AI teacher. Experts in Roblox Luau, Botola Pro Football, and Languages. If the user speaks Arabic, answer in Arabic. Current Question: ${msg}` }] }]
+                        contents: [{ parts: [{ text: `You are Nova 4.0, an AI teacher. Experts in Roblox Luau and Football. If input is Arabic, reply in Arabic. Query: ${val}` }] }]
                     })
                 });
-
                 const data = await response.json();
+                let answer = data.candidates[0].content.parts[0].text;
                 
-                if (data.error) {
-                    loading.innerHTML = `<b style="color:red;">API ERROR:</b> ${data.error.message}`;
-                    return;
-                }
-
-                const answer = data.candidates[0].content.parts[0].text;
-                const cleanAnswer = answer.replace(/\*/g, ""); // Remove markdown for speech
+                // Format Code Blocks
+                answer = answer.replace(/```(.*?)\n([\s\S]*?)```/g, '<div class="code-block">$2</div>');
+                loading.innerHTML = `<b>Nova:</b><br>${answer}`;
                 
-                loading.innerHTML = `<b>Nova:</b> ${answer} <br> <button class="speak-btn" onclick="speakText(\`${cleanAnswer.replace(/[`'"]/g, "")}\`)">🔊 HEAR LESSON</button>`;
-                
-                saveData(msg, answer);
-            } catch (err) {
-                loading.innerHTML = `<b style="color:red;">UPLINK FAILED:</b> Check internet connection.`;
-            }
+                save(val, answer);
+            } catch(e) { loading.innerText = "Connection Error."; }
         }
 
-        function appendMsg(text, type) {
-            const div = document.createElement('div');
-            const isArabic = /[\u0600-\u06FF]/.test(text);
-            div.className = `bubble ${type} ${isArabic ? 'rtl' : ''}`;
-            div.innerHTML = text;
-            screen.appendChild(div);
+        function appendMsg(t, type) {
+            const d = document.createElement('div');
+            const isArabic = /[\u0600-\u06FF]/.test(t);
+            d.className = `bubble ${type} ${isArabic ? 'rtl' : ''}`;
+            d.innerHTML = t;
+            screen.appendChild(d);
             screen.scrollTop = screen.scrollHeight;
-            return div;
+            return d;
         }
 
-        function speakText(text) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = /[\u0600-\u06FF]/.test(text) ? 'ar-SA' : 'en-US';
-            window.speechSynthesis.speak(utterance);
+        function save(q, a) {
+            let h = JSON.parse(localStorage.getItem('nova_v4_history')) || [];
+            h.push({q, a});
+            localStorage.setItem('nova_v4_history', JSON.stringify(h));
         }
 
-        function saveData(q, a) {
-            let history = JSON.parse(localStorage.getItem('nova_2026_save')) || [];
-            history.push({q, a});
-            localStorage.setItem('nova_2026_save', JSON.stringify(history));
-        }
+        function clearAll() { if(confirm("Wipe memory?")) { localStorage.clear(); location.reload(); } }
 
-        function toggleSettings() {
-            const m = document.getElementById('settings-menu');
-            m.style.display = m.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function clearHistory() {
-            if(confirm("Wipe all teacher memory?")) {
-                localStorage.removeItem('nova_2026_save');
-                location.reload();
-            }
-        }
-
-        sendBtn.onclick = askNova;
+        document.getElementById('send').onclick = askNova;
         userInput.onkeypress = (e) => { if(e.key === 'Enter') askNova(); };
     </script>
 </body>
